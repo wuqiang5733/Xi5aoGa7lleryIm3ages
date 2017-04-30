@@ -174,8 +174,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<MediaFolderModel> mediaFolderModels = new ArrayList<>();
         Uri uri;
         Cursor cursor;
-        int column_index_data,
-                column_index_folder_name;
+        int column_index_data, column_index_folder_name;
 
         String absolutePathOfImage = null;
         String tempMediaFolderName = null;
@@ -183,15 +182,31 @@ public class MainActivity extends AppCompatActivity {
 
         String[] projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
 
-        final String orderBy = MediaStore.Images.Media.BUCKET_DISPLAY_NAME;
+//        String orderBy = MediaStore.Images.Media.BUCKET_DISPLAY_NAME;
+        String orderBy = MediaStore.Images.Media.DATE_TAKEN;
+        cursor = getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
+//        cursor = getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
+
+        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+        cursor.moveToNext();
+        // 下面这两句一定要在 cursor.moveToNext();  之后执行
+        tempMediaFolderName = cursor.getString(column_index_folder_name); // 文件夹
+        absolutePathOfImage = cursor.getString(column_index_data);  // 路径
+
+        mediaFolderModels.add(new MediaFolderModel(tempMediaFolderName,25,absolutePathOfImage));
+        cursor.close();
+//        projection = {MediaStore.MediaColumns.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+        // 第二次查询
+        orderBy = MediaStore.Images.Media.BUCKET_DISPLAY_NAME;
 //        final String orderBy = MediaStore.Images.Media.DATE_TAKEN;
         cursor = getContentResolver().query(uri, projection, null, null, orderBy);
 //        cursor = getContentResolver().query(uri, projection, null, null, orderBy + " DESC");
 
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         column_index_folder_name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
-
         cursor.moveToNext();
+
         tempMediaFolderName = cursor.getString(column_index_folder_name); // 文件夹
         absolutePathOfImage = cursor.getString(column_index_data);  // 路径
         MediaFolderModel tempMediaFolderModel = new MediaFolderModel(tempMediaFolderName,1,absolutePathOfImage);
@@ -224,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d("WQWQ",mediaFolderModel.getFirstItemImage());
             Log.d("WQWQ","+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+");
         }
-
+cursor.close();
     }
 
     @Override
