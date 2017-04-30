@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
             String temp = cursor.getString(column_index_folder_name);
             if (tempMediaFolderName.equals(temp)){ // 如果还是上一个文件夹
                 folderItemIndex++;
-                tempMediaFolderModel.setMediaItemSum(folderItemIndex);
+                tempMediaFolderModel.setMediaItemSum(folderItemIndex+1);
             }else{  // 如果不是原来的文件夹了
 //                mediaFolderModels.add(new MediaFolderModel(tempMediaFolderName,folderItemIndex+1,absolutePathOfImage));
                 tempMediaFolderName = cursor.getString(column_index_folder_name); // 文件夹
