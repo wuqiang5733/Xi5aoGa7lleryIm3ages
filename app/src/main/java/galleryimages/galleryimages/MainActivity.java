@@ -194,18 +194,23 @@ public class MainActivity extends AppCompatActivity {
         cursor.moveToNext();
         tempMediaFolderName = cursor.getString(column_index_folder_name); // 文件夹
         absolutePathOfImage = cursor.getString(column_index_data);  // 路径
+        MediaFolderModel tempMediaFolderModel = new MediaFolderModel(tempMediaFolderName,1,absolutePathOfImage);
+        mediaFolderModels.add(tempMediaFolderModel);
 
 
         int folderItemIndex = 0;
         while (cursor.moveToNext()) {
             String temp = cursor.getString(column_index_folder_name);
             if (tempMediaFolderName.equals(temp)){ // 如果还是上一个文件夹
-                folderItemIndex++;  // 文件夹下面的元素加一
-//                break;       // 要不会 ....
+                folderItemIndex++;
+                tempMediaFolderModel.setMediaItemSum(folderItemIndex);
             }else{  // 如果不是原来的文件夹了
-                mediaFolderModels.add(new MediaFolderModel(tempMediaFolderName,folderItemIndex+1,absolutePathOfImage));
+//                mediaFolderModels.add(new MediaFolderModel(tempMediaFolderName,folderItemIndex+1,absolutePathOfImage));
                 tempMediaFolderName = cursor.getString(column_index_folder_name); // 文件夹
                 absolutePathOfImage = cursor.getString(column_index_data);  // 路径
+                tempMediaFolderModel = new MediaFolderModel(tempMediaFolderName,1,absolutePathOfImage);
+                mediaFolderModels.add(tempMediaFolderModel);
+
                 folderItemIndex = 0;  // 重新设置元素索引
             }
 
